@@ -1,0 +1,20 @@
+<?php
+// This function defines the form field
+function form_field($form, &$form_state) {
+	  // This defines a submit button	
+	  $form['submit_button'] = array(
+	    '#type' => 'submit',
+	    // Output submit and wrap with translation support
+	    '#value' => t('Submit'),
+	  );
+	  // Return the form object to output
+	  return $form;
+}
+
+// This function validates the form 
+function form_example_form_validate($form, &$form_state) {
+}
+
+// This function submits the form to the server
+function form_example_form_submit($form, &$form_state) {
+}
