@@ -1,20 +1,55 @@
 <?php
+// Defines a menu hook to display the page at a custom url
+function infx2670northorp_menu() {
+
+	// Custom url at infx2670northorp/form for the form page
+	$items['infx2670northorp/form'] = array(
+		// Title of the page
+		'title' => 'infx2670northorp form',
+		// Description of the form page
+		'description' => 'infx2670northorp Form Page',
+		// Use drupals get form function to get the form data
+		'page callback' => 'drupal_get_form',
+		// call the form function
+		'page arguments' => array('infx2670northorp_form'),
+		'access callback' => TRUE,
+		// Set as a normal menu item
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	// Return the items array
+	return $items;
+}
+
 // This function defines the form field
-function form_field($form, &$form_state) {
-	  // This defines a submit button	
-	  $form['submit_button'] = array(
-	    '#type' => 'submit',
-	    // Output submit and wrap with translation support
-	    '#value' => t('Submit'),
-	  );
-	  // Return the form object to output
-	  return $form;
-}
+function infx2670northorp_form($form, &$form_state) {
+	// Make a textfield and required
+	$form['fname'] = array(
+	    '#type' => 'textfield',
+	    '#title' => 'Enter Your First Name',
+	    '#size' => 20,
+	    '#maxlength' => 20,
+	    // Make this field required
+	    '#required' => TRUE, 
+  	);
 
-// This function validates the form 
-function form_example_form_validate($form, &$form_state) {
-}
+  	// Make a textfield and required
+	$form['lname'] = array(
+	    '#type' => 'textfield',
+	    '#title' => 'Enter Your Last Name',
+	    '#size' => 20,
+	    '#maxlength' => 20,
+	    // Make this field required
+	    '#required' => TRUE, 
+  	);
 
-// This function submits the form to the server
-function form_example_form_submit($form, &$form_state) {
+	// This defines a submit button	
+	$form['submit'] = array(
+		'#type' => 'submit',
+		// Output submit and wrap with translation support
+		'#value' => t('Submit'),
+	);
+
+	// Return the form object to output
+	return $form;
 }
