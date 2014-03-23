@@ -97,13 +97,13 @@ function infx2670northorp_form($form, &$form_state) {
 		'#type' => 'checkboxes',
 		'#title' => t('Select Music You Like'),
 		'#options' => array(
-			0 => t('Rock'),
-			1 => t('Country'),
-			2 => t('Indie'),
-			3 => t('Hip Hop'),
-			4 => t('Rap'),
-			5 => t('Dubstep'),
-			6 => t('Pop'),
+			1 => t('Rock'),
+			2 => t('Country'),
+			3 => t('Indie'),
+			4 => t('Hip Hop'),
+			5 => t('Rap'),
+			6 => t('Dubstep'),
+			7 => t('Pop'),
 		),
 	);
 
@@ -149,7 +149,6 @@ function infx2670northorp_form($form, &$form_state) {
 // Validate form fields with custom validation
 // Also used drupal validation functions in some form elements
 function infx2670northorp_form_validate($form, &$form_state) {
-	print_r($form_state['values']['day']);
 	// Check to make sure they selected a color from the dropdown
 	if ($form_state['values']['colors'] == 0) {
 		form_set_error('colors', t('You must select a color option from the dropdown.'));
@@ -163,12 +162,44 @@ function infx2670northorp_form_validate($form, &$form_state) {
 
 // This function submits the form and saves the values in a table
 function infx2670northorp_form_submit($form, &$form_state) {
-	 $save = db_insert('infx2670_doctor_who')
-    ->fields(array(
-      'fav_character' => $form_state['values']['infx2670_dr_who_character'],
-      'created' => time()
-      ))
-    ->execute();
+	//Get the id's of the checked checkboxes (found on stack overflow)
+	$checked = array_intersect(
+	  array_keys($form_state['values']['music']),
+	  array_values($form_state['values']['music'])
+	);
+	// Music List
+	$musicList = "";
+	// Go through each music value and add it to the list
+	foreach ($checked as $key => $value) {
+	   	$musicList .= $form['inputGroup']['music']['#options'][$value] . ", ";
+	}
 
-  drupal_set_message(t("The Forms values have been saved."));
+	// Get the key of the colors field
+	$field_key = $form_state['values']['colors'];
+	// Get the value for that color
+	$colorValue = $form['inputGroup']['colors']['#options'][$field_key];
+
+	// Get the key of the gender field
+	$field_key = $form_state['values']['gender'];
+	// Get the value for that gender
+	$genderValue = $form['inputGroup']['gender']['#options'][$field_key];
+
+	// DB query
+	$save = db_insert('infx2670northorp_form')
+	->fields(array(
+		'fname' => $form_state['values']['fname'],
+		'lname' => $form_state['values']['lname'],
+		'age' => $form_state['values']['age'],
+		'colors' => $colorValue,
+		'gender' => $genderValue,
+		'music' => $musicList,
+		'movie' => $form_state['values']['movie'],
+		'day' => $form_state['values']['day'],
+		'user_id' => "1",
+		'created' => time()
+	))
+	->execute();
+
+  // Set the message to display on sucessesful submission
+  drupal_set_message(t("Thank you for your survey submission!"));
 }
