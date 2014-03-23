@@ -129,6 +129,10 @@ function infx2670northorp_form($form, &$form_state) {
 		// Set default value to Y2K
 		'#default_value' => $date,
 		'#date_format' => $format,
+		'#date_year_range' => '-80:+50',
+		// Makes sure the date is valid, bug with the checkdate though so it displays additional error if 
+		// a date is invalid
+		'#element_validate' => array('date_validate'),
 	);
 
 	// This defines a submit button	
