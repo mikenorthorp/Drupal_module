@@ -34,9 +34,68 @@ function infx2670northorp_menu() {
 	);
 
 	// Set up admin page to configure form fields
+	$items['admin/config/content/infx2670northorp'] = array(
+		// Set title
+	    'title' => 'infx2670northorp Survey Form Configuration',
+	    // Set description
+	    'description' => 'Survey Form Configuration',
+	    // Callback to get form
+	    'page callback' => 'drupal_get_form',
+	    // Call the function for configuration
+	    'page arguments' => array('infx2670northorp_configuration'),
+	    // Set page access
+	    'access arguments' => array('administer site configuration'),
+	    // Display as normal menu item
+	    'type' => MENU_NORMAL_ITEM,
+	);
 
 	// Return the items array
 	return $items;
+}
+
+// This shows the configuration settings for the administrator
+function infx2670northorp_configuration($form, &$form_state) {
+	// Set checkboxes for each field type
+	// All values set to enabled by default
+
+	// Enable or disable the entire form
+	$form['inputGroup'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Entire Form'),
+	);
+
+	$form['age'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Age Field'),
+	);
+
+	$form['colors'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Colors Field'),
+	);
+
+	$form['gender'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Gender Field'),
+	);
+
+	$form['music'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Music Field'),
+	);
+
+	$form['movie'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Movies Field'),
+	);
+
+	$form['day'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Check To Disable The Day Field'),
+	);
+
+	// Return the system settings form
+  	return system_settings_form($form);
 }
 
 // This callback creates a page in the module to display submission data
