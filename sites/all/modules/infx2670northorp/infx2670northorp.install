@@ -9,15 +9,63 @@ function infx2670northorp_schema() {
      'description' => 'Contains submission answers to the favourites survey in this module',
      // Array of all the fields
      'fields' => array(
-       'answer_id' => array(
-         'description' => 'The primary identifier for a question answer.',
+        'submission_id' => array(
+         'description' => 'The primary identifier for a survey submission.',
          'type' => 'serial',
          'unsigned' => TRUE,
          'not null' => TRUE),
-       'fav_character' => array(
-         'description' => 'The favorite character as entered.',
+       'fname' => array(
+         'description' => 'The first name as entered.',
          'type' => 'varchar',
-         'length' => 255,
+         'length' => 70,
+         'not null' => TRUE,
+         'default' => ''),
+       'lname' => array(
+         'description' => 'The last name as entered',
+         'type' => 'varchar',
+         'length' => 70,
+         'not null' => TRUE,
+         'default' => ''),
+       'age' => array(
+         'description' => 'The age as entered.',
+         'type' => 'varchar',
+         'length' => 10,
+         'not null' => TRUE,
+         'default' => ''),
+       'colors' => array(
+         'description' => 'The favorite color as entered.',
+         'type' => 'varchar',
+         'length' => 50,
+         'not null' => TRUE,
+         'default' => ''),
+       'gender' => array(
+         'description' => 'The gender as entered.',
+         'type' => 'varchar',
+         'length' => 50,
+         'not null' => TRUE,
+         'default' => ''),
+       'music' => array(
+         'description' => 'The favorite music as entered.',
+         'type' => 'varchar',
+         'length' => 50,
+         'not null' => TRUE,
+         'default' => ''),
+       'movie' => array(
+         'description' => 'The favorite movie as entered.',
+         'type' => 'varchar',
+         'length' => 1000,
+         'not null' => TRUE,
+         'default' => ''),
+       'day' => array(
+         'description' => 'The day as entered.',
+         'type' => 'varchar',
+         'length' => 50,
+         'not null' => TRUE,
+         'default' => ''),
+       'user_id' => array(
+         'description' => 'The user id.',
+         'type' => 'varchar',
+         'length' => 50,
          'not null' => TRUE,
          'default' => ''),
        'created' => array(
@@ -26,7 +74,7 @@ function infx2670northorp_schema() {
          'not null' => TRUE,
          'default' => 0),
       ),
-     'primary key' => array('answer_id'),
+     'primary key' => array('submission_id'),
   );
 
   return $schema;

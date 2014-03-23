@@ -160,3 +160,8 @@ function infx2670northorp_form_validate($form, &$form_state) {
 		form_set_error('movie', t('Please remove Son of the Mask from your favorite movies.'));
 	}
 }
+
+// This function submits the form and saves the values in a table
+function infx2670northorp_form_submit($form, &form_state) {
+	
+}
