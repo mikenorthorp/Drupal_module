@@ -1,3 +1,6 @@
 core = "7.x"
 description = "This is a form module with a display page, submission page and admin interface"
 name = "infx2670northorp"
+
+dependencies[] = date
+dependencies[] = date_api
