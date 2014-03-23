@@ -44,7 +44,7 @@ function infx2670northorp_menu() {
 	    // Call the function for configuration
 	    'page arguments' => array('infx2670northorp_configuration'),
 	    // Set page access
-	    'access arguments' => array('administer site configuration'),
+	    'access arguments' => array('access administration pages'),
 	    // Display as normal menu item
 	    'type' => MENU_NORMAL_ITEM,
 	);
@@ -56,51 +56,66 @@ function infx2670northorp_menu() {
 // This shows the configuration settings for the administrator
 function infx2670northorp_configuration($form, &$form_state) {
 	// Set checkboxes for each field type
-	// All values set to enabled by default
+	// All values set to enabled by default (0)
+	// Or they are set to their last known value
 
 	// Enable or disable the entire form
-	$form['inputGroup'] = array(
+	$form['inputGroup_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Entire Form'),
+		'#default_value' => variable_get('inputGroup_disabled', 0),
 	);
 
-	$form['age'] = array(
+	// Age diabled
+	$form['age_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Age Field'),
+		'#default_value' => variable_get('age_disabled', 0),
 	);
 
-	$form['colors'] = array(
+	// Colors disabled
+	$form['colors_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Colors Field'),
+		'#default_value' => variable_get('colors_disabled', 0),
 	);
 
-	$form['gender'] = array(
+	// Gender disabled
+	$form['gender_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Gender Field'),
+		'#default_value' => variable_get('gender_disabled', 0),
 	);
 
-	$form['music'] = array(
+	// Music disabled
+	$form['music_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Music Field'),
+		'#default_value' => variable_get('music_disabled', 0),
 	);
 
-	$form['movie'] = array(
+	// Movie disabled
+	$form['movie_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Movies Field'),
+		'#default_value' => variable_get('movie_disabled', 0),
 	);
 
-	$form['day'] = array(
+	// Day disabled
+	$form['day_disabled'] = array(
 		'#type' => 'checkbox',
 		'#title' => t('Check To Disable The Day Field'),
+		'#default_value' => variable_get('day_disabled', 0),
 	);
 
+	// Thank you message setter
 	$form['thank_you_message'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Thank You Message'),
 	   	'#description' => t('Enter the thank you message shown on sucessful page submit.'),
 	    '#size' => 100,
 	   	'#required' => TRUE,
-	   	'#default_value' => "Your answers have been successfully submitted, thanks!",
+	   	'#default_value' => variable_get('thank_you_message', "Your answers have been successfully submitted, thanks!"),
 	);
 
 	// Return the system settings form
