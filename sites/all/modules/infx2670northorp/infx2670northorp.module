@@ -23,10 +23,19 @@ function infx2670northorp_menu() {
 
 // This function defines the form field
 function infx2670northorp_form($form, &$form_state) {
+	// Fieldset to contain all the field types
+	$form['inputGroup'] = array(
+		'#type' => 'fieldset', 
+		'#title' => t('Favorites Survey'), 
+		'#weight' => 5, 
+		'#collapsible' => TRUE, 
+		'#collapsed' => FALSE,
+	);
+
 	// Make a textfield and required
-	$form['fname'] = array(
+	$form['inputGroup']['fname'] = array(
 	    '#type' => 'textfield',
-	    '#title' => 'Enter Your First Name',
+	    '#title' => 'First Name',
 	    '#size' => 20,
 	    '#maxlength' => 20,
 	    // Make this field required
@@ -34,17 +43,96 @@ function infx2670northorp_form($form, &$form_state) {
   	);
 
   	// Make a textfield and required
-	$form['lname'] = array(
+	$form['inputGroup']['lname'] = array(
 	    '#type' => 'textfield',
-	    '#title' => 'Enter Your Last Name',
+	    '#title' => 'Last Name',
 	    '#size' => 20,
 	    '#maxlength' => 20,
 	    // Make this field required
 	    '#required' => TRUE, 
   	);
 
+	// Make a textfield for age
+  	$form['inputGroup']['age'] = array(
+	    '#type' => 'textfield',
+	    '#title' => 'Age',
+	    '#size' => 4,
+	    '#maxlength' => 3,
+	    // Custom validation function
+	    '#element_validate' => array('element_validate_number'),
+  	);
+
+  	// Select dropdown box for colors
+	$form['inputGroup']['colors'] = array(
+		'#type' => 'select',
+		'#title' => t('Please Select Your Favorite Color'),
+		'#options' => array(
+			0 => t('-Select Color From Dropdown-'),
+			1 => t('Green'),
+			2 => t('Red'),
+			3 => t('Yellow'),
+			4 => t('Purple'),
+			5 => t('Orange'),
+			6 => t('Black'),
+			8 => t('Blue'),
+			9 => t('None of Above'),
+		),
+	);
+
+	// Radio buttons for gender select
+	$form['inputGroup']['gender'] = array(
+		'#type' => 'radios',
+		'#title' => t('What Is Your Gender'),
+		'#options' => array(
+			0 => t('Male'),
+			1 => t('Female'),
+			2 => t('Prefer Not To Say'),
+		),
+		// Set default value
+		'#default_value' => 2,
+	);
+
+	// This creates a series of checkboxes for music likes
+	$form['inputGroup']['music'] = array(
+		'#type' => 'checkboxes',
+		'#title' => t('Select Music You Like'),
+		'#options' => array(
+			0 => t('Rock'),
+			1 => t('Country'),
+			2 => t('Indie'),
+			3 => t('Hip Hop'),
+			4 => t('Rap'),
+			5 => t('Dubstep'),
+			6 => t('Pop'),
+		),
+	);
+
+	// This defines a text area
+	$form['inputGroup']['movie'] = array(
+		'#title' => t('Favorite Movie(s)'),
+		'#type' => 'textarea',
+		'#cols' => 50, 
+		'#rows' => 3,
+		'#description' => t('Please enter your favorite movie or movies in the textfield (do not enter Son Of The Mask as it is a horrible movie...)'),
+	);
+
+	// This gets the favorite day of the person using the date_api
+	// Set the format of the date picker
+	$format = 'Y-m-d';
+	// Default value of start of 2000
+	$date = '2000-01-01';
+	// Configure the date option for favorite day
+	$form['inputGroup']['day'] = array(
+		// Use the date select from the date module
+		'#type' => 'date_select',
+		'#title' => t('Pick Your Favorite Date'),
+		// Set default value to Y2K
+		'#default_value' => $date,
+		'#date_format' => $format,
+	);
+
 	// This defines a submit button	
-	$form['submit'] = array(
+	$form['inputGroup']['submit'] = array(
 		'#type' => 'submit',
 		// Output submit and wrap with translation support
 		'#value' => t('Submit'),
@@ -52,4 +140,19 @@ function infx2670northorp_form($form, &$form_state) {
 
 	// Return the form object to output
 	return $form;
+}
+
+// Validate form fields with custom validation
+// Also used drupal validation functions in some form elements
+function infx2670northorp_form_validate($form, &$form_state) {
+	print_r($form_state['values']['day']);
+	// Check to make sure they selected a color from the dropdown
+	if ($form_state['values']['colors'] == 0) {
+		form_set_error('colors', t('You must select a color option from the dropdown.'));
+	}
+
+	// Check if movies textarea contains son of the mask (case insensitive)
+	if(stristr($form_state['values']['movie'], 'son of the mask')  !== false) {
+		form_set_error('movie', t('Please remove Son of the Mask from your favorite movies.'));
+	}
 }
