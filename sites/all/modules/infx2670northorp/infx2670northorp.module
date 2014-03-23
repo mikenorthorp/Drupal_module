@@ -5,7 +5,7 @@ function infx2670northorp_menu() {
 	// Custom url at infx2670northorp/form for the form page
 	$items['infx2670northorp/form'] = array(
 		// Title of the page
-		'title' => 'infx2670northorp form',
+		'title' => 'infx2670northorp Form',
 		// Description of the form page
 		'description' => 'infx2670northorp Form Page',
 		// Use drupals get form function to get the form data
@@ -17,8 +17,59 @@ function infx2670northorp_menu() {
 		'type' => MENU_NORMAL_ITEM,
 	);
 
+	// Set up content page to view submissions
+	$items['infx2670/view'] = array(
+		'title' => 'infx2670northorp View Form Submissions',
+		'description' => 'View Form Submissions',
+		'page callback' => 'infx2670northorp_plainpage',
+		'access callback' => TRUE,
+		'type' => MENU_NORMAL_ITEM,
+	);
+	// Set up admin page to configure form fields
+
+
 	// Return the items array
 	return $items;
+}
+
+// This callback creates a page in the module to display submission data
+function infx2670northorp_plainpage() {
+	// Get the global user variable 
+	global $user;
+	$user_id = $user->uid;
+
+	$isAdmin = false;
+	if($user_id == 1) {
+		$isAdmin = true;
+	}
+
+	$output = '';
+
+	// Set up top message
+	$output .= token_replace(t('<p>Welcome to the forms submitted [current-user:name]!</p>'));
+	$output .= t("<p>Below you can see all of the forms submitted and delete them if you are an admin.</p>");
+
+	// Grab the results 
+	$result = db_select('infx2670northorp_form')
+		->fields('infx2670northorp_form', array('submission_id', 'fname', 'lname', 'age', 'colors', 'gender', 'music', 'movie', 'day', 'user_id', 'created'))
+		->execute()
+		->fetchAllAssoc('submission_id');
+
+	// Set up headers for all the database inputs
+	$header = array("Submission ID", "First Name", "Last Name", "Age", "Colors", "Gender", "Music", "Movie", "Day", "User ID", "Created On");
+
+	// Add each result to the rows array
+	foreach ($result as $result_row) {
+		$rows[] = array($result_row->submission_id, $result_row->fname, $result_row->lname, $result_row->age, $result_row->colors, $result_row->gender, $result_row->music, $result_row->movie, $result_row->day, $result_row->user_id, date('Y-m-d H:i:s', $result_row->created));
+	}
+
+	// Go through all the rows and add them to output in table format
+	if (!empty($rows)) {
+		$output .= theme('table', array('header' => $header, 'rows' => $rows));
+	}
+
+	// Output to the page
+	return $output;
 }
 
 // This function defines the form field
