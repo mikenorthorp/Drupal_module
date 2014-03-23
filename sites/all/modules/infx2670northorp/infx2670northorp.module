@@ -150,7 +150,55 @@ function infx2670northorp_plainpage() {
 
 	// Add each result to the rows array
 	foreach ($result as $result_row) {
-		$rows[] = array($result_row->submission_id, $result_row->fname, $result_row->lname, $result_row->age, $result_row->colors, $result_row->gender, $result_row->music, $result_row->movie, $result_row->day, $result_row->user_id, date('Y-m-d H:i:s', $result_row->created));
+		$filteredRow = array($result_row->submission_id, $result_row->fname, $result_row->lname, $result_row->age, $result_row->colors, $result_row->gender, $result_row->music, $result_row->movie, $result_row->day, $result_row->user_id, date('Y-m-d H:i:s', $result_row->created));
+
+		// Remove any disabled fields from this row
+		if(variable_get('age_disabled')) {
+			unset($filteredRow[3]);
+		}
+		if(variable_get('colors_disabled')) {
+			unset($filteredRow[4]);
+		}
+		if(variable_get('gender_disabled')) {
+			unset($filteredRow[5]);
+		}
+		if(variable_get('music_disabled')) {
+			unset($filteredRow[6]);
+		}
+		if(variable_get('movie_disabled')) {
+			unset($filteredRow[7]);
+		}
+		if(variable_get('day_disabled')) {
+			unset($filteredRow[8]);
+		}
+
+		// Set rows = to the filtered row
+		$rows[] = $filteredRow;
+	}
+
+	// Remove elements from header as well
+	if(variable_get('age_disabled')) {
+		unset($header[3]);
+	}
+
+	if(variable_get('colors_disabled')) {
+		unset($header[4]);
+	}
+
+	if(variable_get('gender_disabled')) {
+		unset($header[5]);
+	}
+
+	if(variable_get('music_disabled')) {
+		unset($header[6]);
+	}
+
+	if(variable_get('movie_disabled')) {
+		unset($header[7]);
+	}
+
+	if(variable_get('day_disabled')) {
+		unset($header[8]);
 	}
 
 	// Go through all the rows and add them to output in table format
@@ -203,123 +251,144 @@ function infx2670northorp_plainpage_submit($form, &$form_state) {
 // This function defines the form field
 function infx2670northorp_form($form, &$form_state) {
 	// Fieldset to contain all the field types
-	$form['inputGroup'] = array(
-		'#type' => 'fieldset', 
-		'#title' => t('Favorites Survey'), 
-		'#weight' => 5, 
-		'#collapsible' => TRUE, 
-		'#collapsed' => FALSE,
-	);
+	// Check if disabled, then disable whole form inside the fieldset
+	if(!variable_get('inputGroup_disabled')) {
+		$form['inputGroup'] = array(
+			'#type' => 'fieldset', 
+			'#title' => t('Favorites Survey'), 
+			'#weight' => 5, 
+			'#collapsible' => TRUE, 
+			'#collapsed' => FALSE,
+		);
 
-	// Make a textfield and required
-	$form['inputGroup']['fname'] = array(
-	    '#type' => 'textfield',
-	    '#title' => 'First Name',
-	    '#size' => 20,
-	    '#maxlength' => 20,
-	    // Make this field required
-	    '#required' => TRUE, 
-  	);
+		// Make a textfield and required
+		$form['inputGroup']['fname'] = array(
+		    '#type' => 'textfield',
+		    '#title' => 'First Name',
+		    '#size' => 20,
+		    '#maxlength' => 20,
+		    // Make this field required
+		    '#required' => TRUE, 
+	  	);
 
-  	// Make a textfield and required
-	$form['inputGroup']['lname'] = array(
-	    '#type' => 'textfield',
-	    '#title' => 'Last Name',
-	    '#size' => 20,
-	    '#maxlength' => 20,
-	    // Make this field required
-	    '#required' => TRUE, 
-  	);
+	  	// Make a textfield and required
+		$form['inputGroup']['lname'] = array(
+		    '#type' => 'textfield',
+		    '#title' => 'Last Name',
+		    '#size' => 20,
+		    '#maxlength' => 20,
+		    // Make this field required
+		    '#required' => TRUE, 
+	  	);
 
-	// Make a textfield for age
-  	$form['inputGroup']['age'] = array(
-	    '#type' => 'textfield',
-	    '#title' => 'Age',
-	    '#size' => 4,
-	    '#maxlength' => 3,
-	    // Custom validation function
-	    '#element_validate' => array('element_validate_number'),
-  	);
+		// Check if age field disabled
+		if(!variable_get('age_disabled')) {
+			// Make a textfield for age
+		  	$form['inputGroup']['age'] = array(
+			    '#type' => 'textfield',
+			    '#title' => 'Age',
+			    '#size' => 4,
+			    '#maxlength' => 3,
+			    // Custom validation function
+			    '#element_validate' => array('element_validate_number'),
+		  	);
+	 	}
 
-  	// Select dropdown box for colors
-	$form['inputGroup']['colors'] = array(
-		'#type' => 'select',
-		'#title' => t('Please Select Your Favorite Color'),
-		'#options' => array(
-			0 => t('-Select Color From Dropdown-'),
-			1 => t('Green'),
-			2 => t('Red'),
-			3 => t('Yellow'),
-			4 => t('Purple'),
-			5 => t('Orange'),
-			6 => t('Black'),
-			8 => t('Blue'),
-			9 => t('None of Above'),
-		),
-	);
+	 	// Check if colors field disabled
+		if(!variable_get('colors_disabled')) {
+		  	// Select dropdown box for colors
+			$form['inputGroup']['colors'] = array(
+				'#type' => 'select',
+				'#title' => t('Please Select Your Favorite Color'),
+				'#options' => array(
+					0 => t('-Select Color From Dropdown-'),
+					1 => t('Green'),
+					2 => t('Red'),
+					3 => t('Yellow'),
+					4 => t('Purple'),
+					5 => t('Orange'),
+					6 => t('Black'),
+					8 => t('Blue'),
+					9 => t('None of Above'),
+				),
+			);
+		}
 
-	// Radio buttons for gender select
-	$form['inputGroup']['gender'] = array(
-		'#type' => 'radios',
-		'#title' => t('What Is Your Gender'),
-		'#options' => array(
-			0 => t('Male'),
-			1 => t('Female'),
-			2 => t('Prefer Not To Say'),
-		),
-		// Set default value
-		'#default_value' => 2,
-	);
+		// Check if gender field disabled
+		if(!variable_get('gender_disabled')) {
+			// Radio buttons for gender select
+			$form['inputGroup']['gender'] = array(
+				'#type' => 'radios',
+				'#title' => t('What Is Your Gender'),
+				'#options' => array(
+					0 => t('Male'),
+					1 => t('Female'),
+					2 => t('Prefer Not To Say'),
+				),
+				// Set default value
+				'#default_value' => 2,
+			);
+		}
 
-	// This creates a series of checkboxes for music likes
-	$form['inputGroup']['music'] = array(
-		'#type' => 'checkboxes',
-		'#title' => t('Select Music You Like'),
-		'#options' => array(
-			1 => t('Rock'),
-			2 => t('Country'),
-			3 => t('Indie'),
-			4 => t('Hip Hop'),
-			5 => t('Rap'),
-			6 => t('Dubstep'),
-			7 => t('Pop'),
-		),
-	);
+		// Check if music field disabled
+		if(!variable_get('music_disabled')) {
+			// This creates a series of checkboxes for music likes
+			$form['inputGroup']['music'] = array(
+				'#type' => 'checkboxes',
+				'#title' => t('Select Music You Like'),
+				'#options' => array(
+					1 => t('Rock'),
+					2 => t('Country'),
+					3 => t('Indie'),
+					4 => t('Hip Hop'),
+					5 => t('Rap'),
+					6 => t('Dubstep'),
+					7 => t('Pop'),
+				),
+			);
+		}
 
-	// This defines a text area
-	$form['inputGroup']['movie'] = array(
-		'#title' => t('Favorite Movie(s)'),
-		'#type' => 'textarea',
-		'#cols' => 50, 
-		'#rows' => 3,
-		'#description' => t('Please enter your favorite movie or movies in the textfield (do not enter Son Of The Mask as it is a horrible movie...)'),
-	);
+		// Check if movie field disabled
+		if(!variable_get('movie_disabled')) {
+			// This defines a text area
+			$form['inputGroup']['movie'] = array(
+				'#title' => t('Favorite Movie(s)'),
+				'#type' => 'textarea',
+				'#cols' => 50, 
+				'#rows' => 3,
+				'#description' => t('Please enter your favorite movie or movies in the textfield (do not enter Son Of The Mask as it is a horrible movie...)'),
+			);
+		}
 
-	// This gets the favorite day of the person using the date_api
-	// Set the format of the date picker
-	$format = 'Y-m-d';
-	// Default value of start of 2000
-	$date = '2000-01-01';
-	// Configure the date option for favorite day
-	$form['inputGroup']['day'] = array(
-		// Use the date select from the date module
-		'#type' => 'date_select',
-		'#title' => t('Pick Your Favorite Date'),
-		// Set default value to Y2K
-		'#default_value' => $date,
-		'#date_format' => $format,
-		'#date_year_range' => '-80:+50',
-		// Makes sure the date is valid, bug with the checkdate though so it displays additional error if 
-		// a date is invalid
-		'#element_validate' => array('date_validate'),
-	);
+		// Check if day field disabled
+		if(!variable_get('day_disabled')) {
+			// This gets the favorite day of the person using the date_api
+			// Set the format of the date picker
+			$format = 'Y-m-d';
+			// Default value of start of 2000
+			$date = '2000-01-01';
+			// Configure the date option for favorite day
+			$form['inputGroup']['day'] = array(
+				// Use the date select from the date module
+				'#type' => 'date_select',
+				'#title' => t('Pick Your Favorite Date'),
+				// Set default value to Y2K
+				'#default_value' => $date,
+				'#date_format' => $format,
+				'#date_year_range' => '-80:+50',
+				// Makes sure the date is valid, bug with the checkdate though so it displays additional error if 
+				// a date is invalid
+				'#element_validate' => array('date_validate'),
+			);
+		}
 
-	// This defines a submit button	
-	$form['inputGroup']['submit'] = array(
-		'#type' => 'submit',
-		// Output submit and wrap with translation support
-		'#value' => t('Submit'),
-	);
+		// This defines a submit button	
+		$form['inputGroup']['submit'] = array(
+			'#type' => 'submit',
+			// Output submit and wrap with translation support
+			'#value' => t('Submit'),
+		);
+	}
 
 	// Return the form object to output
 	return $form;
@@ -329,13 +398,19 @@ function infx2670northorp_form($form, &$form_state) {
 // Also used drupal validation functions in some form elements
 function infx2670northorp_form_validate($form, &$form_state) {
 	// Check to make sure they selected a color from the dropdown
-	if ($form_state['values']['colors'] == 0) {
-		form_set_error('colors', t('You must select a color option from the dropdown.'));
+	// Only do check if colors is enabled
+	if(!variable_get('colors_disabled')) {
+		if ($form_state['values']['colors'] == 0) {
+			form_set_error('colors', t('You must select a color option from the dropdown.'));
+		}
 	}
 
-	// Check if movies textarea contains son of the mask (case insensitive)
-	if(stristr($form_state['values']['movie'], 'son of the mask')  !== false) {
-		form_set_error('movie', t('Please remove Son of the Mask from your favorite movies.'));
+	// Only do check if movie is enabled
+	if(!variable_get('movie_disabled')) {
+		// Check if movies textarea contains son of the mask (case insensitive)
+		if(stristr($form_state['values']['movie'], 'son of the mask')  !== false) {
+			form_set_error('movie', t('Please remove Son of the Mask from your favorite movies.'));
+		}
 	}
 }
 
@@ -344,44 +419,76 @@ function infx2670northorp_form_submit($form, &$form_state) {
 	// Get the user ID of the current user
 	global $user;
 	$user_id = "" . $user->uid;
-	//Get the id's of the checked checkboxes (found on stack overflow)
-	$checked = array_intersect(
-	  array_keys($form_state['values']['music']),
-	  array_values($form_state['values']['music'])
-	);
-	// Music List
+
+	// Create variables for all fields and set them to empty strings (incase of disabled)
+	$ageValue = "";
+	$colorValue = "";
+	$genderValue = "";
 	$musicList = "";
-	// Go through each music value and add it to the list
-	foreach ($checked as $key => $value) {
-	   	$musicList .= $form['inputGroup']['music']['#options'][$value] . ", ";
+	$movieValue = "";
+	$dayValue = "";
+
+	// Check if music list is null
+	if($form_state['values']['music'] != NULL) {
+		//Get the id's of the checked checkboxes (found on stack overflow)
+		$checked = array_intersect(
+		  array_keys($form_state['values']['music']),
+		  array_values($form_state['values']['music'])
+		);
+
+		// Go through each music value and add it to the list
+		foreach ($checked as $key => $value) {
+		   	$musicList .= $form['inputGroup']['music']['#options'][$value] . ", ";
+		}
 	}
 
-	// Get the key of the colors field
-	$field_key = $form_state['values']['colors'];
-	// Get the value for that color
-	$colorValue = $form['inputGroup']['colors']['#options'][$field_key];
+	// Check if age is null
+	if($form_state['values']['age'] != NULL) {
+		$ageValue = $form_state['values']['age'];
+	}
 
-	// Get the key of the gender field
-	$field_key = $form_state['values']['gender'];
-	// Get the value for that gender
-	$genderValue = $form['inputGroup']['gender']['#options'][$field_key];
+	// Check if movie is null
+	if($form_state['values']['movie'] != NULL) {
+		$movieValue = $form_state['values']['movie'];
+	}
+
+	// check if day is null
+	if($form_state['values']['day'] != NULL) {
+		$dayValue = $form_state['values']['day'];
+	}
+
+	// Check if colors are null
+	if($form_state['values']['colors'] != NULL) {
+		// Get the key of the colors field
+		$field_key = $form_state['values']['colors'];
+		// Get the value for that color
+		$colorValue = $form['inputGroup']['colors']['#options'][$field_key];
+	}
+
+	// Check if gender is null
+	if($form_state['values']['gender'] != NULL) {
+		// Get the key of the gender field
+		$field_key = $form_state['values']['gender'];
+		// Get the value for that gender
+		$genderValue = $form['inputGroup']['gender']['#options'][$field_key];
+	}
 
 	// DB query
 	$save = db_insert('infx2670northorp_form')
 	->fields(array(
 		'fname' => $form_state['values']['fname'],
 		'lname' => $form_state['values']['lname'],
-		'age' => $form_state['values']['age'],
+		'age' => $ageValue,
 		'colors' => $colorValue,
 		'gender' => $genderValue,
 		'music' => $musicList,
-		'movie' => $form_state['values']['movie'],
-		'day' => $form_state['values']['day'],
+		'movie' => $movieValue,
+		'day' => $dayValue,
 		'user_id' => $user_id,
 		'created' => time()
 	))
 	->execute();
 
   // Set the message to display on sucessesful submission
-  drupal_set_message(t("Thank you for your survey submission!"));
+  drupal_set_message(t(variable_get('thank_you_message')));
 }
