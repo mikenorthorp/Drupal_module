@@ -251,13 +251,20 @@ function infx2670northorp_plainpage() {
 
 // Submit logic when user wants to delete a row
 function infx2670northorp_plainpage_submit($form, &$form_state) {
-	// Delete the row 
-	$delete = db_delete('infx2670northorp_form')
-		->condition('submission_id', $form_state['values']['submission_id'])
-		->execute();
+	// Allows a user to delete a submission row if the permission is checked for that user
+	// in the access permissions
+	if(user_access("delete infx2670northorp form")){
+		// Delete the row 
+		$delete = db_delete('infx2670northorp_form')
+			->condition('submission_id', $form_state['values']['submission_id'])
+			->execute();
 
-	// Display message to user
-	drupal_set_message(t("The row with Submission ID" . $form_state['values']['submission_id'] . " has been removed!"));
+		// Display message to user
+		drupal_set_message(t("The row with Submission ID " . $form_state['values']['submission_id'] . " has been removed!"));
+	} else {
+		// Display message to user if they do not have permission to delete
+		form_set_error('submission_id', t('You do not have permission to delete a row. Please enable the "delete infx2670northorp form" permission for your user'));
+	}
 }
 
 // This function defines the form field
