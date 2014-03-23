@@ -1,6 +1,12 @@
+; Custom urls used are below
+; Form Page = /infx2670northorp/form
+; View Form Page = /infx2670northorp/form
+; Admin Config Pag = /admin/config/content/infx2670northorp
+; More information can be found in readme
 core = "7.x"
-description = "This is a form module with a display page, submission page and admin interface"
+description = "This is a form module with a display page, submission page and admin config page"
 name = "infx2670northorp"
 
+; Dependancies used are the date and date_api 
 dependencies[] = date
 dependencies[] = date_api
