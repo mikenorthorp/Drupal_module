@@ -1,0 +1,33 @@
+<?php
+
+// This sets up the schema for the database to save the field information
+function infx2670northorp_schema() {
+
+  $schema = array();
+
+  $schema['infx2670northorp_form'] = array(
+     'description' => 'Contains submission answers to the favourites survey in this module',
+     // Array of all the fields
+     'fields' => array(
+       'answer_id' => array(
+         'description' => 'The primary identifier for a question answer.',
+         'type' => 'serial',
+         'unsigned' => TRUE,
+         'not null' => TRUE),
+       'fav_character' => array(
+         'description' => 'The favorite character as entered.',
+         'type' => 'varchar',
+         'length' => 255,
+         'not null' => TRUE,
+         'default' => ''),
+       'created' => array(
+         'description' => 'The Unix timestamp when the answer was created.',
+         'type' => 'int',
+         'not null' => TRUE,
+         'default' => 0),
+      ),
+     'primary key' => array('answer_id'),
+  );
+
+  return $schema;
+}
