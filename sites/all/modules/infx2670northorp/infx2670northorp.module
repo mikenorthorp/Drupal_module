@@ -162,6 +162,9 @@ function infx2670northorp_form_validate($form, &$form_state) {
 
 // This function submits the form and saves the values in a table
 function infx2670northorp_form_submit($form, &$form_state) {
+	// Get the user ID of the current user
+	global $user;
+	$user_id = "" . $user->uid;
 	//Get the id's of the checked checkboxes (found on stack overflow)
 	$checked = array_intersect(
 	  array_keys($form_state['values']['music']),
@@ -195,7 +198,7 @@ function infx2670northorp_form_submit($form, &$form_state) {
 		'music' => $musicList,
 		'movie' => $form_state['values']['movie'],
 		'day' => $form_state['values']['day'],
-		'user_id' => "1",
+		'user_id' => $user_id,
 		'created' => time()
 	))
 	->execute();
