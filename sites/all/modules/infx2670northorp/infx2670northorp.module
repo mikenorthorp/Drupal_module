@@ -94,6 +94,15 @@ function infx2670northorp_configuration($form, &$form_state) {
 		'#title' => t('Check To Disable The Day Field'),
 	);
 
+	$form['thank_you_message'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Thank You Message'),
+	   	'#description' => t('Enter the thank you message shown on sucessful page submit.'),
+	    '#size' => 100,
+	   	'#required' => TRUE,
+	   	'#default_value' => "Your answers have been successfully submitted, thanks!",
+	);
+
 	// Return the system settings form
   	return system_settings_form($form);
 }
