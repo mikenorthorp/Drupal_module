@@ -162,6 +162,13 @@ function infx2670northorp_form_validate($form, &$form_state) {
 }
 
 // This function submits the form and saves the values in a table
-function infx2670northorp_form_submit($form, &form_state) {
-	
+function infx2670northorp_form_submit($form, &$form_state) {
+	 $save = db_insert('infx2670_doctor_who')
+    ->fields(array(
+      'fav_character' => $form_state['values']['infx2670_dr_who_character'],
+      'created' => time()
+      ))
+    ->execute();
+
+  drupal_set_message(t("The Forms values have been saved."));
 }
