@@ -18,15 +18,22 @@ function infx2670northorp_menu() {
 	);
 
 	// Set up content page to view submissions
-	$items['infx2670/view'] = array(
+	// This is a form due to the way of deleting records..
+	$items['infx2670northorp/view'] = array(
+		// Title
 		'title' => 'infx2670northorp View Form Submissions',
+		// Description
 		'description' => 'View Form Submissions',
-		'page callback' => 'infx2670northorp_plainpage',
+		// Callback to drupal get form
+		'page callback' => 'drupal_get_form',
+		// Function for content display
+	    'page arguments' => array('infx2670northorp_plainpage'),
 		'access callback' => TRUE,
+		// Set as normal menu item
 		'type' => MENU_NORMAL_ITEM,
 	);
-	// Set up admin page to configure form fields
 
+	// Set up admin page to configure form fields
 
 	// Return the items array
 	return $items;
@@ -68,8 +75,46 @@ function infx2670northorp_plainpage() {
 		$output .= theme('table', array('header' => $header, 'rows' => $rows));
 	}
 
-	// Output to the page
-	return $output;
+	// Could not get links and hooks working to delete a record, so using a form with a text field and button below
+	// to remove fields.. 
+
+	// Output the page with one form, 2nd form allows deletion of rows
+	$form['page_output'] = array(
+		// Set to markup type so we can display the page output
+		'#type' => 'markup', 
+		// Set it to the output
+		'#markup' => $output,
+	);
+
+	$form['submission_id'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('Delete Row'),
+	   	'#description' => t('To delete a row, enter the Submission ID here'),
+	    '#size' => 5,
+	    // Custom validation function
+	    '#element_validate' => array('element_validate_number'),
+	   	'#required' => TRUE,
+	);
+
+	// Submit button to delete row
+	$form['submit'] = array(
+	   '#type' => 'submit',
+	   '#value' => t('Delete Row'),
+	);
+
+	// Return the form to the submit callback which displays the page output as well
+	return $form;
+}
+
+// Submit logic when user wants to delete a row
+function infx2670northorp_plainpage_submit($form, &$form_state) {
+	// Delete the row 
+	$delete = db_delete('infx2670northorp_form')
+		->condition('submission_id', $form_state['values']['submission_id'])
+		->execute();
+
+	// Display message to user
+	drupal_set_message(t("The row with Submission ID" . $form_state['values']['submission_id'] . " has been removed!"));
 }
 
 // This function defines the form field
