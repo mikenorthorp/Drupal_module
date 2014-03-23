@@ -1,4 +1,16 @@
 <?php
+
+// Set up custom permissions
+function infx2670northorp_permission() {
+	// Set up custom permisson to allow a user to delete form submission data
+	return array(
+		'delete inx2670northorp form' => array(
+				'title' => t('Delete infx2670nothorp submission rows'),
+		    	'description' => t('Allows deletion of rows for all submissions in the infx2670northorp module.'),
+		),
+	);
+}
+
 // Defines a menu hook to display the page at a custom url
 function infx2670northorp_menu() {
 
@@ -44,7 +56,7 @@ function infx2670northorp_menu() {
 	    // Call the function for configuration
 	    'page arguments' => array('infx2670northorp_configuration'),
 	    // Set page access
-	    'access arguments' => array('access administration pages'),
+	    'access arguments' => array('administer site configuration'),
 	    // Display as normal menu item
 	    'type' => MENU_NORMAL_ITEM,
 	);
@@ -428,8 +440,8 @@ function infx2670northorp_form_submit($form, &$form_state) {
 	$movieValue = "";
 	$dayValue = "";
 
-	// Check if music list is null
-	if($form_state['values']['music'] != NULL) {
+	// Check if music list is not disabled
+	if(!variable_get('music_disabled')) {
 		//Get the id's of the checked checkboxes (found on stack overflow)
 		$checked = array_intersect(
 		  array_keys($form_state['values']['music']),
@@ -442,31 +454,31 @@ function infx2670northorp_form_submit($form, &$form_state) {
 		}
 	}
 
-	// Check if age is null
-	if($form_state['values']['age'] != NULL) {
+	// Check if age is not disabled
+	if(!variable_get('age_disabled')) {
 		$ageValue = $form_state['values']['age'];
 	}
 
-	// Check if movie is null
-	if($form_state['values']['movie'] != NULL) {
+	// Check if movie not disabledis null
+	if(!variable_get('movie_disabled')) {
 		$movieValue = $form_state['values']['movie'];
 	}
 
-	// check if day is null
-	if($form_state['values']['day'] != NULL) {
+	// check if day not disabled
+	if(!variable_get('day_disabled')) {
 		$dayValue = $form_state['values']['day'];
 	}
 
-	// Check if colors are null
-	if($form_state['values']['colors'] != NULL) {
+	// Check if colors are not disabled
+	if(!variable_get('colors_disabled')) {
 		// Get the key of the colors field
 		$field_key = $form_state['values']['colors'];
 		// Get the value for that color
 		$colorValue = $form['inputGroup']['colors']['#options'][$field_key];
 	}
 
-	// Check if gender is null
-	if($form_state['values']['gender'] != NULL) {
+	// Check if gender is not disabled
+	if(!variable_get('gender_disabled')) {
 		// Get the key of the gender field
 		$field_key = $form_state['values']['gender'];
 		// Get the value for that gender
@@ -489,6 +501,6 @@ function infx2670northorp_form_submit($form, &$form_state) {
 	))
 	->execute();
 
-  // Set the message to display on sucessesful submission
+  // Set the message to display on sucessesful submission from admin configuration page
   drupal_set_message(t(variable_get('thank_you_message')));
 }
